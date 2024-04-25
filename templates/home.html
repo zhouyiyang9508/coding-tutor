@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Your next generation coding tutor</h1>
+    <div>
+        <form action="{{ url_for('learn') }}" method="get">
+            <label for="language">Choose a language to start a new session:</label>
+            <select name="language" id="language">
+                <option value="en">English</option>
+                <option value="zh">中文</option>
+            </select>
+            <button type="submit">Start New Session</button>
+        </form>
+    </div>
+    <div>
+        <!-- Form to enter session ID and recover existing session -->
+        <form action="{{ url_for('learn') }}" method="get">
+            <input type="text" name="session" placeholder="Enter Session ID" required>
+            <button type="submit">Recover Session</button>
+        </form>
+    </div>
+</body>
+</html>

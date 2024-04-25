@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ask the Tutor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        textarea {
+            width: 80vw;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid #007BFF;
+            font-size: 16px;
+            overflow: hidden;
+            resize: none;
+            min-height: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #answers {
+            margin-top: 20px;
+            text-align: left;
+            width: 80vw;
+            max-height: 50vh;
+            overflow: auto;
+        }
+        div.answer {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 5px solid #007BFF;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <textarea id="questionTextarea" placeholder="Ask the tutor something on coding" oninput="autoResizeTextarea()"></textarea>
+        <button type="button">Send</button>
+        <div id="answers"></div>
+    </div>
+
+    <script>
+        function autoResizeTextarea() {
+            const textarea = document.getElementById('questionTextarea');
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        document.querySelector('button').addEventListener('click', function() {
+            const question = document.getElementById('questionTextarea').value;
+            fetch('/tutor', {
+                method: 'POST',
+                body: JSON.stringify({ question: question }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const answersDiv = document.getElementById('answers');
+                const converter = new showdown.Converter();
+                const answerHtml = converter.makeHtml(data.answer);
+
+                const answerDiv = document.createElement('div');
+                answerDiv.classList.add('answer');
+                answerDiv.innerHTML = `<strong>Question:</strong> ${question}<br><span class="highlight">Answer:</span> ${answerHtml}`;
+                answersDiv.appendChild(answerDiv);
+
+                document.getElementById('questionTextarea').value = ''; // Clear the textarea
+                autoResizeTextarea(); // Reset textarea height
+                hljs.highlightAll(); // Apply syntax highlighting
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

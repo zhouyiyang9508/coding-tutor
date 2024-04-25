@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask the Tutor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/learn.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <h1>Welcome to Your Learning Session</h1>
+        <p>Your session language is set to: <strong>{{ language }}</strong></p>
+        <p>Your unique session ID: <strong>{{ session_id }}</strong></p>
+    </header>
+    <main class="container">
+        <form id="questionForm" onsubmit="submitQuestion(); return false;">
+            <label for="questionTextarea" class="visually-hidden">Ask the tutor something on coding:</label>
+            <textarea id="questionTextarea" placeholder="Ask the tutor something on coding" oninput="autoResizeTextarea()"></textarea>
+            <button type="submit">Send</button>
+        </form>
+        <section id="answers" class="answers"></section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/learn.js') }}"></script>
+</body>
+</html>
